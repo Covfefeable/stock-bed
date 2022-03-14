@@ -1,8 +1,6 @@
-requirements: python3.10
+## 量化交易辅助决策平台后端
 
-量化交易辅助决策平台后端
-
-## 推荐使用anaconda
+推荐使用anaconda
 
 ### 创建环境
 
