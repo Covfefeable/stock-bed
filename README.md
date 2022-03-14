@@ -13,7 +13,9 @@ conda activate stock
 ## 安装依赖
 
 pip install django
+
 pip install django-cors-headers
+
 pip install baostock -i https://pypi.tuna.tsinghua.edu.cn/simple/ --trusted-host pypi.tuna.tsinghua.edu.cn
 
 下面的是计算macd需要的库
