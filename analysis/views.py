@@ -7,6 +7,8 @@ import pandas as pd
 
 import talib as ta
 
+lg = bs.login()
+
 def index(request):
     # 股票代码，sh或sz.+6位数字代码，或者指数代码，如：sh.601398。sh：上海；sz：深圳。此参数不可为空；
     stock_code = request.GET.get("stock_code")
@@ -45,14 +47,6 @@ def index(request):
 
     if frequency == '5' or frequency == '15' or frequency == '30' or frequency == '60':
         data = 'time,open,close,low,high,volume,amount,adjustflag'
-    lg = bs.login()
-
-    if lg.error_msg != 'success':
-        jsonres = {
-            'code': '500',
-            'msg': lg.error_msg
-        }
-        return HttpResponse(json.dumps(jsonres))
 
     rs = bs.query_history_k_data_plus(
         stock_code,
@@ -75,10 +69,8 @@ def index(request):
     result = pd.DataFrame(data_list, columns=rs.fields)
 
     res = result.to_json( orient='split')
-    result.to_json(".\cache\A_" + stock_code + "_" + start_date + "_" + end_date + "_f" + frequency + ".json", orient='split')
+    result.to_json("./cache/A_" + stock_code + "_" + start_date + "_" + end_date + "_f" + frequency + ".json", orient='split')
 
-    #### 登出系统 ####
-    bs.logout()
     return HttpResponse(res)
 
 def macd(request):
@@ -106,15 +98,6 @@ def macd(request):
         }
         return HttpResponse(json.dumps(jsonres))
 
-    lg = bs.login()
-
-    if lg.error_msg != 'success':
-        jsonres = {
-            'code': '500',
-            'msg': lg.error_msg
-        }
-        return HttpResponse(json.dumps(jsonres))
-
     rs = bs.query_history_k_data_plus(
         stock_code,
         data,
@@ -139,6 +122,5 @@ def macd(request):
     dif, dea, hist = ta.MACD(df2['close'].astype(float).values, fastperiod=12, slowperiod=26, signalperiod=9)
     df3 = pd.DataFrame({'dif': dif[33:], 'dea': dea[33:], 'hist': hist[33:]})
     res = df3.to_json( orient='split')
-    #### 登出系统 ####
-    bs.logout()
+
     return HttpResponse(res)

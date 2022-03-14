@@ -16,15 +16,6 @@ def basic(request):
         }
         return HttpResponse(json.dumps(jsonres))
 
-    lg = bs.login()
-
-    if lg.error_msg != 'success':
-        jsonres = {
-            'code': '500',
-            'msg': lg.error_msg
-        }
-        return HttpResponse(json.dumps(jsonres))
-
     rs = bs.query_stock_basic(code=stock_code)
     if rs.error_msg != 'success':
         jsonres = {
@@ -38,8 +29,7 @@ def basic(request):
         data_list.append(rs.get_row_data())
     result = pd.DataFrame(data_list, columns=rs.fields)
     res = result.to_json( orient='records')
-    #### 登出系统 ####
-    bs.logout()
+
     return HttpResponse(res)
 
 def search(request):
@@ -50,15 +40,6 @@ def search(request):
         jsonres = {
             'code': '500',
             'msg': '股票名称(stock_name)不能为空'
-        }
-        return HttpResponse(json.dumps(jsonres))
-
-    lg = bs.login()
-
-    if lg.error_msg != 'success':
-        jsonres = {
-            'code': '500',
-            'msg': lg.error_msg
         }
         return HttpResponse(json.dumps(jsonres))
 
@@ -75,6 +56,5 @@ def search(request):
         data_list.append(rs.get_row_data())
     result = pd.DataFrame(data_list, columns=rs.fields)
     res = result.to_json( orient='records')
-    #### 登出系统 ####
-    bs.logout()
+
     return HttpResponse(res)
