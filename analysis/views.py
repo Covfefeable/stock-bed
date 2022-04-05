@@ -130,6 +130,7 @@ def macd(request):
     while (rs.error_code == '0') & rs.next():
         data_list.append(rs.get_row_data())
     result = pd.DataFrame(data_list, columns=rs.fields)
+    # df_status = result[result['tradeStatus'] == '1']
     df2 = result
 
     dif, dea, hist = ta.MACD(df2['close'].astype(float).values, fastperiod=12, slowperiod=26, signalperiod=9)
